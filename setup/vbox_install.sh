@@ -9,7 +9,7 @@ else
 fi
 
 apt-get update
-if apt-get install virtualbox-6.1; then
+if apt-get install -y virtualbox-6.1; then
 	echo "Successfully installed virtualbox"
 else
 	echo "Failed to install virtualbox"

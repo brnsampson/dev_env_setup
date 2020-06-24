@@ -1,6 +1,6 @@
-wget -q https://releases.hashicorp.com/vagrant/2.1.5/vagrant_2.1.5_SHA256SUMS -O vagrant_SHA256SUMS
-wget -q https://releases.hashicorp.com/vagrant/2.1.5/vagrant_2.1.5_SHA256SUMS.sig -O vagrant_SHA256SUMS.sig
-wget -q https://releases.hashicorp.com/vagrant/2.1.5/vagrant_2.1.5_linux_amd64.zip -O vagrant_2.1.5_linux_amd64.zip
+wget -q https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_SHA256SUMS -O packer_SHA256SUMS
+wget -q https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_SHA256SUMS.sig -O packer_SHA256SUMS.sig
+wget -q https://releases.hashicorp.com/packer/1.5.6/packer_1.5.6_linux_amd64.zip -O packer_1.5.6_linux_amd64.zip
 
 # This is the hashicorp PGP key. They don't provide it in an easy to wget location,
 # but you can find it at https://www.hashicorp.com/security
@@ -39,25 +39,31 @@ EOF
 
 # Verify sig and download
 gpg --import hashicorp.asc
-if gpg --verify vagrant_SHA256SUMS.sig vagrant_SHA256SUMS; then
-	echo "vagrantSHA sum file verified against hashicorp signature and GPG key. Seems legit."
+if gpg --verify packer_SHA256SUMS.sig packer_SHA256SUMS; then
+	echo "SHA sum file verified against hashicorp signature and GPG key. Seems legit."
 else
-	echo "vagrant SHA sum file failed to verify against hashicorp sig and GPG key. Corrupt files, changed GPG key, or bad actor possible."
+	echo "packer SHA sum file failed to verify against hashicorp sig and GPG key. Corrupt files, changed GPG key, or bad actor possible."
 	exit 1
 fi
 
-if shasum -a 256 -c vagrant_SHA256SUMS --ignore-missing; then
-	echo "Vagrant verified"
+if shasum -a 256 -c packer_SHA256SUMS --ignore-missing; then
+	echo "Packer verified"
 else
-	echo "Failed to verify vagrant zipfile. Corrupt file, wrong sum file, or malicious actor possible."
+	echo "Failed to verify packer zipfile. Corrupt file, wrong sum file, or malicious actor possible."
 	exit 2
 fi
 
 # Actually unzip and install
-unzip vagrant_2.1.5_linux_amd64.zip
-sudo mv vagrant /usr/local/bin
+unzip packer_1.5.6_linux_amd64.zip
+sudo mv packer /usr/local/bin
 
-rm vagrant_SHA256SUMS vagrant_SHA256SUMS.sig hashicorp.asc vagrant_2.1.5_linux_amd64.zip
+rm packer_SHA256SUMS packer_SHA256SUMS.sig hashicorp.asc packer_1.5.6_linux_amd64.zip
 
-echo "Vagrant installed successfully"
+mkdir ~/tmp
+echo "export TMPDIR=~/tmp" >> ~/.bashrc
+echo "export HEADLESS=true">> ~/.bashrc
+
+source ~/.bashrc
+
+echo "Packer installed successfully"
 echo ""

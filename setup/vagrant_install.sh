@@ -1,6 +1,6 @@
-wget -q https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_SHA256SUMS -O packer_SHA256SUMS
-wget -q https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_SHA256SUMS.sig -O packer_SHA256SUMS.sig
-wget -q https://releases.hashicorp.com/packer/1.6.0/packer_1.6.0_linux_amd64.zip -O packer_1.6.0_linux_amd64.zip
+wget -q https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_SHA256SUMS -O vagrant_SHA256SUMS
+wget -q https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_SHA256SUMS.sig -O vagrant_SHA256SUMS.sig
+wget -q https://releases.hashicorp.com/vagrant/2.2.9/vagrant_2.2.9_x86_64.deb -O vagrant_2.2.9_x86_64.deb
 
 # This is the hashicorp PGP key. They don't provide it in an easy to wget location,
 # but you can find it at https://www.hashicorp.com/security
@@ -39,25 +39,35 @@ EOF
 
 # Verify sig and download
 gpg --import hashicorp.asc
-if gpg --verify packer_SHA256SUMS.sig packer_SHA256SUMS; then
-	echo "SHA sum file verified against hashicorp signature and GPG key. Seems legit."
+if gpg --verify vagrant_SHA256SUMS.sig vagrant_SHA256SUMS; then
+	echo "vagrantSHA sum file verified against hashicorp signature and GPG key. Seems legit."
 else
-	echo "packer SHA sum file failed to verify against hashicorp sig and GPG key. Corrupt files, changed GPG key, or bad actor possible."
+	echo "vagrant SHA sum file failed to verify against hashicorp sig and GPG key. Corrupt files, changed GPG key, or bad actor possible."
 	exit 1
 fi
 
-if shasum -a 256 -c packer_SHA256SUMS --ignore-missing; then
-	echo "Packer verified"
+if shasum -a 256 -c vagrant_SHA256SUMS --ignore-missing; then
+	echo "Vagrant verified"
 else
-	echo "Failed to verify packer zipfile. Corrupt file, wrong sum file, or malicious actor possible."
-	exit 2
+	echo "Failed to verify vagrant zipfile. Corrupt file, wrong sum file, or malicious actor possible."
+	exit 1 
 fi
 
 # Actually unzip and install
-unzip packer_1.6.0_linux_amd64.zip
-sudo mv packer /usr/local/bin
+#unzip vagrant_2.2.9_linux_amd64.zip
+#sudo mv vagrant /usr/local/bin
+sudo dpkg -i vagrant_2.2.9_x86_64.deb
+# To remove: sudo apt-get remove vagrant
 
-rm packer_SHA256SUMS packer_SHA256SUMS.sig hashicorp.asc packer_1.6.0_linux_amd64.zip
+rm vagrant_SHA256SUMS vagrant_SHA256SUMS.sig hashicorp.asc vagrant_2.2.9_x86_64.deb
 
-echo "Packer installed successfully"
+# If we upgraded vagrant at all then reinstalling plugins is necessary
+if vagrant plugin expunge --reinstall --force; then
+	echo "Reinstalled all plugins for current version of vagrant"
+else
+	echo "Failed to reinstall plugins for current version of vagrant"
+	exit 1
+fi
+
+echo "Vagrant installed successfully"
 echo ""
