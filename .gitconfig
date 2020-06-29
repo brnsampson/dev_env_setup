@@ -1,7 +1,0 @@
-# This is Git's per-user configuration file.
-[user]
-# Please adapt and uncomment the following lines:
-#	name = Brian Sampson
-#	email = bsampson@infra01.whobe.us
-[core]
-	editor = vim

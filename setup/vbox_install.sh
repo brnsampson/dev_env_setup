@@ -1,4 +1,4 @@
-echo 'deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian buster contrib' >> /etc/apt/sources.list
+sudo add-apt-repository "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian $(lsb_release -cs) contrib"
 
 wget -q https://www.virtualbox.org/download/oracle_vbox_2016.asc -O oracle_vbox_2016.asc
 if apt-key add oracle_vbox_2016.asc; then
