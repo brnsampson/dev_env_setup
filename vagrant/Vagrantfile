@@ -10,42 +10,42 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  config.vm.define "windows" do |win|
-    # Every Vagrant development environment requires a box. You can search for
-    # boxes at https://vagrantcloud.com/search.
-    win.vm.box = "windows-2016-nocm"
-
-    # Disable automatic box update checking. If you disable this, then
-    # boxes will only be checked for updates when the user runs
-    # `vagrant box outdated`. This is not recommended.
-    win.vm.box_check_update = true
-
-    # Create a forwarded port mapping which allows access to a specific port
-    # within the machine from a port on the host machine. In the example below,
-    # accessing "localhost:8080" will access port 80 on the guest machine.
-    # NOTE: This will enable public access to the opened port
-    # win.vm.network "forwarded_port", guest: 80, host: 8080
-
-    # Create a private network, which allows host-only access to the machine
-    # using a specific IP.
-    win.vm.network "private_network", ip: "192.168.33.10"
-
-    # Share an additional folder to the guest VM. The first argument is
-    # the path on the host to the actual folder. The second argument is
-    # the path on the guest to mount the folder. And the optional third
-    # argument is a set of non-required options.
-    win.vm.synced_folder "./provision", "C:\provision"
-
-    # Enable provisioning with a shell script. Additional provisioners such as
-    # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
-    # documentation for more information about their specific syntax and use.
-    win.vm.provision "shell", path: "scripts/provision.ps1"
-  end
+#  config.vm.define "windows" do |win|
+#    # Every Vagrant development environment requires a box. You can search for
+#    # boxes at https://vagrantcloud.com/search.
+#    win.vm.box = "windows-2016-nocm"
+#
+#    # Disable automatic box update checking. If you disable this, then
+#    # boxes will only be checked for updates when the user runs
+#    # `vagrant box outdated`. This is not recommended.
+#    win.vm.box_check_update = true
+#
+#    # Create a forwarded port mapping which allows access to a specific port
+#    # within the machine from a port on the host machine. In the example below,
+#    # accessing "localhost:8080" will access port 80 on the guest machine.
+#    # NOTE: This will enable public access to the opened port
+#    # win.vm.network "forwarded_port", guest: 80, host: 8080
+#
+#    # Create a private network, which allows host-only access to the machine
+#    # using a specific IP.
+#    win.vm.network "private_network", ip: "192.168.33.10"
+#
+#    # Share an additional folder to the guest VM. The first argument is
+#    # the path on the host to the actual folder. The second argument is
+#    # the path on the guest to mount the folder. And the optional third
+#    # argument is a set of non-required options.
+#    win.vm.synced_folder "./provision", "C:\provision"
+#
+#    # Enable provisioning with a shell script. Additional provisioners such as
+#    # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
+#    # documentation for more information about their specific syntax and use.
+#    win.vm.provision "shell", path: "scripts/provision.ps1"
+#  end
 
   config.vm.define "linux" do |linux|
     # Every Vagrant development environment requires a box. You can search for
     # boxes at https://vagrantcloud.com/search.
-    linux.vm.box = "bento/ubuntu-20.04"
+    linux.vm.box = "ubuntu/bionic64"
 
     # Disable automatic box update checking. If you disable this, then
     # boxes will only be checked for updates when the user runs
@@ -67,13 +67,24 @@ Vagrant.configure("2") do |config|
     # the path on the host to the actual folder. The second argument is
     # the path on the guest to mount the folder. And the optional third
     # argument is a set of non-required options.
-    linux.vm.synced_folder "./provision", "/tmp/provision"
-    linux.vm.synced_folder "./systemd", "/tmp/systemd"
+    linux.vm.synced_folder "./provision/policyfiles/motd", "/tmp/chef"
+    linux.vm.synced_folder "./provision/data_bags", "/tmp/data_bags"
+
+    #linux.ssh.pty = true
 
     # Enable provisioning with a shell script. Additional provisioners such as
     # Ansible, Chef, Docker, Puppet and Salt are also available. Please see the
     # documentation for more information about their specific syntax and use.
-    linux.vm.provision "shell", path: "scripts/provision.sh"
+    linux.vm.provision "shell", inline: "echo '{\"policy_name\":\"motd\",\"policy_group\":\"local\"}' > /tmp/chef/dna.json"
+    linux.vm.provision "shell", path: "provision/scripts/debian_noninteractive.sh"
+    linux.vm.provision "chef_zero", version: "13.12.14", cookbooks_path: "provision/policyfiles/motd/cookbook_artifacts", nodes_path: "provision/nodes"
+    linux.vm.provision "shell", path: "provision/scripts/provision.sh"
+  
+    # Post destroy cleanup. Does not work on older version of vagrant so currently commented out.
+    #linux.trigger.after :destroy do |trigger|
+    #  trigger.name = "cleanup"
+    #  trigger.rum = {inline: "rm -rf provision/nodes/*"}
+    #end 
   end
 
   # Provider-specific configuration so you can fine-tune various
@@ -91,5 +102,5 @@ Vagrant.configure("2") do |config|
   #
   # View the documentation for the provider you are using for more
   # information on available options.
-
+  
 end
