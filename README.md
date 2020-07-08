@@ -25,7 +25,7 @@ export HEADLESS=true
 Next, build the image by navigating into the boxcutter repo and running the makefile. I suggest using the eval-windows-2016-ssh image build right now.
 
 cd windows
-make virtualbox/eval-windows-2016-ssh
+make virtualbox/eval-win2016-standard-ssh
 <This will take quite a while. Around an hour probably>
 vagrant box add windows-2016-nocm ./box/virtualbox/eval-win2016-standard-ssh-nocm-*.box
 
