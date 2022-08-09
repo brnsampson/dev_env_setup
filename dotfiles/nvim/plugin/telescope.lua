@@ -1,10 +1,13 @@
-" Using Lua functions
-vim.cmd [[nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>]]
-vim.cmd [[nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>]]
-vim.cmd [[nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>]]
-vim.cmd [[nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>]]
-vim.cmd [[nnoremap <leader>fo <cmd>lua require('telescope.builtin').vim_options()<cr>]]
-vim.cmd [[nnoremap <leader>fs <cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>]]
+-- Using Lua functions
+vim.g.mapleader = ' '
+
+local map = vim.api.nvim_set_keymap
+map('n', '<Leader>ff', ':Telescope find_files<cr>', {desc = 'fuzzy find files'})
+map('n', '<Leader>fg', ':Telescope live_grep<cr>', {desc = 'fuzzy grep'})
+map('n', '<Leader>fb', ':Telescope buffers<cr>', {desc = 'fuzzy find buffers'})
+map('n', '<Leader>fh', ':Telescope help_tags<cr>', {desc = 'fuzzy find help tags'})
+map('n', '<Leader>fo', ':Telescope vim_options<cr>', {desc = 'fuzzy find vim options'})
+map('n', '<Leader>fs', ':Telescope current_buffer_fuzzy_find<cr>', {desc = 'fuzzy search in buffer'})
 
 require('telescope').setup{
   defaults = {
