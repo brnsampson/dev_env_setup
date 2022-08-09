@@ -3,6 +3,7 @@
 local opt = vim.opt
 
 vim.cmd [[colorscheme gruvbox]]
+vim.cmd [[highlight ColorColumn cterm=reverse ctermfg=108 ctermbg=235 gui=reverse guifg=#8ec07c guibg=#282828]]
 
 -- Ignore compiled files
 opt.wildignore = "__pycache__"
