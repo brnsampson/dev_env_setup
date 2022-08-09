@@ -1,6 +1,6 @@
 This repo is meant to be everything necessary for setting up and running a windows and linux development environment. It does not contain any code project, but will include a couple vagrantfiles for setting up VMs with a basic infrastructure setup e.g. monitoring and log collection. Those can be used as starting points for setting up development environments for specific application stacks.
 
-Please note that this was written on and for linux. I would be surprised if anything works as-is on mac or windows.
+Please note that not everything will work on every OS. I will try to note in each directory where it should work, but no promises.
 
 # Prereqs
 
