@@ -1,6 +1,4 @@
 -- Using Lua functions
-vim.g.mapleader = ' '
-
 local map = vim.api.nvim_set_keymap
 map('n', '<Leader>ff', ':Telescope find_files<cr>', {desc = 'fuzzy find files'})
 map('n', '<Leader>fg', ':Telescope live_grep<cr>', {desc = 'fuzzy grep'})

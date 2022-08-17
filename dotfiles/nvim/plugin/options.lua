@@ -18,7 +18,7 @@ opt.exrc = true
 opt.guicursor = ""
 opt.showmode = true
 opt.showcmd = true
-opt.cmdheight = 2 -- Height of the command bar
+opt.cmdheight = 1 -- Height of the command bar
 opt.colorcolumn = "120" -- Code beyone 120 lines generally means something is wrong
 opt.signcolumn = "yes" -- Keep vim from jumping around when signs pop up
 opt.incsearch = true -- Makes search act like search in modern browsers
@@ -68,9 +68,6 @@ opt.expandtab = true
 opt.breakindent = true
 opt.showbreak = " ↳"
 opt.linebreak = true
-
-opt.foldmethod = "marker"
-opt.foldlevel = 0
 opt.modelines = 1
 
 opt.belloff = "all" -- Just turn the dang bell off
@@ -108,3 +105,8 @@ opt.joinspaces = false -- Two spaces and grade school, we're done
 opt.fillchars = { eob = "~" }
 
 vim.opt.diffopt = { "internal", "filler", "closeoff", "hiddenoff", "algorithm:minimal" }
+
+-- completion options
+opt.infercase = false
+opt.completeopt = {"longest", "menuone"}
+opt.shortmess = opt.shortmess + "c"

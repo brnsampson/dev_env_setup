@@ -10,11 +10,18 @@ First off, if you have any software updates or need any basic tools like homebre
 
 You will need to install the following prerequisites:
 
+* install go, rust, and whatever other programming languages you plan to use
 * One or more nice fonts: https://www.nerdfonts.com/font-downloads
 * ripgrep: https://github.com/BurntSushi/ripgrep
 * fd: https://github.com/sharkdp/fd
 * neovim itself: https://github.com/neovim/neovim/wiki/Installing-Neovim
 * vim-plug: https://github.com/junegunn/vim-plug
+* brew install rust-analyser
+* go install github.com/go-delve/delve/cmd/dlv@latesta
+* xcode-select --install
+* sudo /usr/sbin/DevToolsSecurity -enable
+* sudo dscl . append /Groups/_developer GroupMembership $(whoami)
+* brew install npm
 
 #Config Setup
 
@@ -22,6 +29,9 @@ Run the following:
 * chmod +x nvim_configure.sh
 * ./nvim_configure.sh
 * nvim -c PlugInstall
+* nvim -c "MasonInstall vale flake8 rubocop golangcl-lint tflint"
+* nvim -c "MasonInstall delve"
+* nvim -c "MasonInstall autopep8 gofumpt stylua"
 
 # Regular Maintenance
 
