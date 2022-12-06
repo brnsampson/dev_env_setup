@@ -1,5 +1,12 @@
 -- Taken from lspconfig.lua
 local mapkey = vim.keymap.set
+--local extension_path = vim.env.HOME .. '/.vscode/extensions/vadimcn.vscode-lldb-1.8.1/'
+--local codelldb_path = extension_path .. 'codelldb'
+--local liblldb_path = extension_path .. 'lldb/lib/liblldb.so'
+local path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/packages/codelldb/extension/") or ""
+local codelldb_path = path .. "adapter/codelldb"
+local liblldb_path = path .. "lldb/lib/liblldb.dylib"
+
 local on_attach = function(client, bufnr)
     -- Enable completion triggered by <c-x><c-o>
     vim.api.nvim_buf_set_option(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
@@ -23,6 +30,8 @@ local on_attach = function(client, bufnr)
     mapkey('n', '<Leader>ca', vim.lsp.buf.code_action, bufopts)
     mapkey('n', '<Leader>lf', vim.lsp.buf.formatting, bufopts)
 end
+
+local rt = require('rust-tools')
 
 local opts = {
   tools = { -- rust-tools options
@@ -185,13 +194,42 @@ local opts = {
   }, -- rust-analyer options
 
   -- debugging stuff
-  dap = {
-    adapter = {
-      type = "executable",
-      command = "lldb-vscode",
-      name = "rt_lldb",
-    },
-  },
+  --dap = {
+  --  adapter = {
+  --    type = "executable",
+  --    command = "lldb-vscode",
+  --    name = "rt_lldb",
+  --  },
+  --},
+  --dap = {
+  --    adapter = require('rust-tools.dap').get_codelldb_adapter(codelldb_path, liblldb_path),
+  --},
 }
 
-require('rust-tools').setup(opts)
+if vim.fn.filereadable(codelldb_path) and vim.fn.filereadable(liblldb_path) then
+  opts.dap = {
+    adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+    --adapter = {
+    --  type = "server",
+    --  port = "3000",
+    --  host = "127.0.0.1",
+    --  executable = {
+    --    command = codelldb_path,
+    --    --args = { "--liblldb", liblldb_path, "--port", "3000" },
+    --    args = { "--port", "3000" },
+    --  },
+    --},
+  }
+else
+  local msg = "Either codelldb or liblldb is not readable."
+    .. "\n codelldb: "
+    .. codelldb_path
+    .. "\n liblldb: "
+    .. liblldb_path
+  vim.notify(msg, vim.log.levels.ERROR)
+end
+
+--local dap = require("dap")
+--dap.defaults.fallback.terminal_win_cmd = "50vsplit new"
+
+rt.setup(opts)

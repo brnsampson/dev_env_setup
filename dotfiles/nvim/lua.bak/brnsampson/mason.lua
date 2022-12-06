@@ -62,19 +62,6 @@ vim.api.nvim_create_autocmd({ "BufWritePost" }, {
   end,
 })
 
--- nvim-dap
-require('dap')
--- Set debug signs
-vim.fn.sign_define('DapBreakpoint', {text='🛑', texthl='', linehl='', numhl=''})
-vim.fn.sign_define('DapBreakpointCondition', {text='❓', texthl='', linehl='', numhl=''})
-map_lua('n', '<Leader>db', require('dap').toggle_breakpoint, {desc = 'Add debug breakpoint'})
-map_lua('n', '<Leader>dc', require('dap').continue, {desc = 'Debug continue'})
-map_lua('n', '<Leader>dd', require('dap').step_into, {desc = 'Debug decend/step into'})
-map_lua('n', '<Leader>ds', require('dap').step_over, {desc = 'Debug step over'})
-
--- nvim-dap-go
-require('dap-go').setup()
-
 -- formatter
 -- Utilities for creating configurations
 local util = require "formatter.util"
