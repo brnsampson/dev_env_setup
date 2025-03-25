@@ -22,6 +22,7 @@ You will need to install the following prerequisites:
 * sudo /usr/sbin/DevToolsSecurity -enable
 * sudo dscl . append /Groups/_developer GroupMembership $(whoami)
 * brew install npm
+* brew install luasnip
 
 ## Config Setup
 

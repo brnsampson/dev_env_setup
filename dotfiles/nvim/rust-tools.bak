@@ -1,0 +1,21 @@
+return {
+  "simrat39/rust-tools.nvim",
+  dependencies = { "mason-lspconfig.nvim" },
+  ft = { "rust" },
+  opts = function() return { server = require("astronvim.utils.lsp").config "rust_analyzer" } end,
+  config = function()
+    local lsp = require("astronvim.lsp")
+    local rt = require("rust-tools")
+    local path = vim.fn.glob(vim.fn.stdpath("data") ..
+      "/mason/packages/codelldb/extension/") or ""
+    local codelldb_path = path .. "adapter/codelldb"
+    local liblldb_path = path .. "lldb/lib/liblldb.dylib"
+    rt.setup({
+      server = lsp.config "rust_analyzer", -- get the lsp.config from the AstroNvim tables to allow use with lsp.config and lsp.on_attach user configuration
+      dap = {
+        adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path
+        , liblldb_path),
+      },
+    })
+  end,
+}

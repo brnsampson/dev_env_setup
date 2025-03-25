@@ -5,19 +5,18 @@
 -- normal format is "key = value". These also handle array like data structures
 -- where a value with no key simply has an implicit numeric key
 local config = {
-
         -- Configure AstroNvim updates
         updater = {
-                remote = "origin", -- remote to use
-                channel = "nightly", -- "stable" or "nightly"
-                version = "latest", -- "latest", tag name, or regex search like "v1.*" to only do updates before v2 (STABLE ONLY)
-                branch = "main", -- branch name (NIGHTLY ONLY)
-                commit = nil, -- commit hash (NIGHTLY ONLY)
-                pin_plugins = nil, -- nil, true, false (nil will pin plugins on stable only)
-                skip_prompts = false, -- skip prompts about breaking changes
+                remote = "origin",     -- remote to use
+                channel = "nightly",   -- "stable" or "nightly"
+                version = "latest",    -- "latest", tag name, or regex search like "v1.*" to only do updates before v2 (STABLE ONLY)
+                branch = "main",       -- branch name (NIGHTLY ONLY)
+                commit = nil,          -- commit hash (NIGHTLY ONLY)
+                pin_plugins = nil,     -- nil, true, false (nil will pin plugins on stable only)
+                skip_prompts = false,  -- skip prompts about breaking changes
                 show_changelog = true, -- show the changelog after performing an update
-                auto_reload = false, -- automatically reload and sync packer after a successful update
-                auto_quit = false, -- automatically quit the current session after a successful update
+                auto_reload = false,   -- automatically reload and sync packer after a successful update
+                auto_quit = false,     -- automatically quit the current session after a successful update
                 -- remotes = { -- easily add new remotes to track
                 --   ["remote_name"] = "https://remote_url.come/repo.git", -- full remote url
                 --   ["remote2"] = "github_user/repo", -- GitHub user/repo shortcut,
@@ -43,20 +42,23 @@ local config = {
                 opt = {
                         -- set to true or false etc.
                         relativenumber = true, -- sets vim.opt.relativenumber
-                        number = true, -- sets vim.opt.number
-                        spell = false, -- sets vim.opt.spell
-                        signcolumn = "auto", -- sets vim.opt.signcolumn to auto
-                        wrap = false, -- sets vim.opt.wrap
+                        number = true,         -- sets vim.opt.number
+                        spell = false,         -- sets vim.opt.spell
+                        signcolumn = "auto",   -- sets vim.opt.signcolumn to auto
+                        colorcolumn = "120",
+                        cursorline = true,
+                        wrap = true, -- sets vim.opt.wrap
+                        showbreak = " ↳"
                 },
                 g = {
-                        mapleader = " ", -- sets vim.g.mapleader
-                        autoformat_enabled = true, -- enable or disable auto formatting at start (lsp.formatting.format_on_save must be enabled)
-                        cmp_enabled = true, -- enable completion at start
-                        autopairs_enabled = true, -- enable autopairs at start
-                        diagnostics_enabled = true, -- enable diagnostics at start
+                        mapleader = " ",                   -- sets vim.g.mapleader
+                        autoformat_enabled = true,         -- enable or disable auto formatting at start (lsp.formatting.format_on_save must be enabled)
+                        cmp_enabled = true,                -- enable completion at start
+                        autopairs_enabled = true,          -- enable autopairs at start
+                        diagnostics_enabled = true,        -- enable diagnostics at start
                         status_diagnostics_enabled = true, -- enable diagnostics in statusline
-                        icons_enabled = true, -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
-                        ui_notifications_enabled = true, -- disable notifications when toggling UI elements
+                        icons_enabled = true,              -- disable icons in the UI (disable if no nerd font is available, requires :PackerSync after changing)
+                        ui_notifications_enabled = true,   -- disable notifications when toggling UI elements
                 },
         },
         -- If you need more control, you can use the function()...end notation
@@ -144,7 +146,7 @@ local config = {
                 formatting = {
                         -- control auto formatting on save
                         format_on_save = {
-                                enabled = true, -- enable or disable format on save globally
+                                enabled = true,     -- enable or disable format on save globally
                                 allow_filetypes = { -- enable format on save for specified filetypes only
                                         -- "go",
                                 },
@@ -176,7 +178,7 @@ local config = {
                 -- end,
 
                 -- Add overrides for LSP server settings, the keys are the name of the server
-                ["server-settings"] = {
+                ["config"] = {
                         -- Done in user/lsp/server-settings/init.lua
                         -- example for addings schemas to yamlls
                         -- yamlls = { -- override table for require("lspconfig").yamlls.setup({...})
@@ -218,88 +220,7 @@ local config = {
 
         -- Configure plugins
         plugins = {
-                init = {
-                        -- You can disable default plugins as follows:
-                        -- ["goolord/alpha-nvim"] = { disable = true },
-
-                        -- You can also add new plugins here as well:
-                        -- Add plugins, the packer syntax without the "use"
-                        -- { "andweeb/presence.nvim" },
-                        -- {
-                        --   "ray-x/lsp_signature.nvim",
-                        --   event = "BufRead",
-                        --   config = function()
-                        --     require("lsp_signature").setup()
-                        --   end,
-                        -- },
-
-                        -- We also support a key value style plugin definition similar to NvChad:
-                        -- ["ray-x/lsp_signature.nvim"] = {
-                        --   event = "BufRead",
-                        --   config = function()
-                        --     require("lsp_signature").setup()
-                        --   end,
-                        -- },
-                },
-                -- All other entries override the require("<key>").setup({...}) call for default plugins
-                ["null-ls"] = function(config) -- overrides `require("null-ls").setup(config)`
-                        -- config variable is the default configuration table for the setup function call
-                        -- local null_ls = require "null-ls"
-
-                        -- Check supported formatters and linters
-                        -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/formatting
-                        -- https://github.com/jose-elias-alvarez/null-ls.nvim/tree/main/lua/null-ls/builtins/diagnostics
-                        config.sources = {
-                                -- Set a formatter
-                                -- null_ls.builtins.formatting.stylua,
-                                -- null_ls.builtins.formatting.prettier,
-                        }
-                        return config -- return final config table
-                end,
-                treesitter = { -- overrides `require("treesitter").setup(...)`
-                        -- ensure_installed = { "lua" },
-                },
-                -- use mason-lspconfig to configure LSP installations
-                ["mason-lspconfig"] = { -- overrides `require("mason-lspconfig").setup(...)`
-                        ensure_installed = {
-                                "awk_ls", --awk-language-server
-                                "bashls", --bash-language-server
-                                "cssls", --css-lsp
-                                "cssmodules_ls", --cssmodules-language-server
-                                "dockerls", --dockerfile-language-server
-                                "dotls", --dot-language-server
-                                "gopls",
-                                "graphql", --graphql-language-service-cli
-                                "html", --html-lsp
-                                "jsonls", --json-lsp
-                                "sumneko_lua", --lua-language-server
-                                --"nginx-language-server",
-                                "pyright",
-                                "rust_analyzer", --rust-analyzer
-                                "taplo",
-                                "terraformls", --terraform-ls",
-                                "tflint",
-                                "tsserver", --typescript-language-server
-                                "yamlls", --yaml-language-server
-                        },
-                },
-                -- use mason-null-ls to configure Formatters/Linter installation for null-ls sources
-                ["mason-null-ls"] = { -- overrides `require("mason-null-ls").setup(...)`
-                        -- ensure_installed = { "prettier", "stylua" },
-                },
-        },
-
-        -- LuaSnip Options
-        luasnip = {
-                -- Extend filetypes
-                filetype_extend = {
-                        -- javascript = { "javascriptreact" },
-                },
-                -- Configure luasnip loaders (vscode, lua, and/or snipmate)
-                vscode = {
-                        -- Add paths for including more VS Code style snippets in luasnip
-                        paths = {},
-                },
+                init = {},
         },
 
         -- CMP Source Priorities
